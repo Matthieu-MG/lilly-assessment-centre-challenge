@@ -35,9 +35,12 @@ async function fetchMedicines() {
     // TODO: fetch(`${BASE_URL}/medicines`), check response.ok, return the data.
     const response = await fetch(`${BASE_URL}/medicines`);
     if(response.ok) {
-        
+        // Parse and formats medicine data
+        return parseMedicineData(response);
     }
     else {
+        // Return error message
+        // TODO in proper response format
         return response.statusText;
     }
 }
@@ -104,6 +107,7 @@ async function fetchUnreliable() {
     
     if(response.ok) {
         //calls parseMedicineData
+        return parseMedicineData(response);
     }
     else {
         console.log(await response.json());
@@ -112,43 +116,42 @@ async function fetchUnreliable() {
 }
 
 // Format Medicine data for both routes and returns it
-async function parseMedicineData() {
-// Parse response data into javascript object
-        // Try/catch would be implemented in future
-        const data = (await response.json()).medicines;
-        console.log(data);
+async function parseMedicineData(response) {
+    // Parse response data into javascript object
+    // Try/catch would be implemented in future
+    const data = (await response.json()).medicines;
 
-        // Counter variable for logging purposes
-        var count = 0;
+    // Counter variable for logging purposes
+    var count = 0;
 
-        // Map lists to readable format and return
-        return data.map((medicine) => {
-            var name = medicine.name;
-            var price = medicine.price;
+    // Map lists to readable format and return
+    return data.map((medicine) => {
+        var name = medicine.name;
+        var price = medicine.price;
 
-            if(!name) {
-                console.log(`Medicine name is missing at element ${count}`)
-                console.log(name)
-                name = "<MEDICINE NAME MISSING>"
-            }
-            if(!price) {
-                console.log(`Price is missing at element ${count}`)
-                console.log(price)
-                price = "<PRICE MISSING>"
-            }
-            
-            // Converts price to string
-            price = `${price}`
+        if(!name) {
+            console.log(`Medicine name is missing at element ${count}`)
+            console.log(name)
+            name = "<MEDICINE NAME MISSING>"
+        }
+        if(!price) {
+            console.log(`Price is missing at element ${count}`)
+            console.log(price)
+            price = "<PRICE MISSING>"
+        }
+        
+        // Converts price to string
+        price = `${price}`
 
-            // Increment index count
-            count++;
+        // Increment index count
+        count++;
 
-            // Return formatted medicine data
-            return {
-                name,
-                price 
-            }
-        })
+        // Return formatted medicine data
+        return {
+            name,
+            price 
+        }
+    })
 }
 
 // ---- Button wiring (already works - no need to change) ----
@@ -167,5 +170,7 @@ document.getElementById("load-medicines").addEventListener("click", async () => 
 
 document.getElementById("load-unreliable").addEventListener("click", async () => {
     // TODO: call fetchUnreliable().
-    await fetchUnreliable();
+    const med = await fetchUnreliable();
+
+    // render meds
 });
