@@ -172,5 +172,11 @@ document.getElementById("load-unreliable").addEventListener("click", async () =>
     // TODO: call fetchUnreliable().
     const med = await fetchUnreliable();
 
-    // render meds
+    // render meds and show error message properly
+    if(med) {
+        renderMedicines(med);
+    }
+    else {
+        // Display error on frontend properly, with error message and code for reportability
+    }
 });
