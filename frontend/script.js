@@ -25,6 +25,13 @@ const resultsEl = document.getElementById("results");
 const loadingEl = document.getElementById("loading");
 const errorEl = document.getElementById("error");
 
+/*
+    Interface MedicineResponse {
+        ok: boolean // Response received properly,
+        data: array || object // if true, then display data, else display error
+    }
+*/
+
 /**
  * TODO (Core task 1): fetch the list of medicines from /medicines.
  * Return the medicines array. Surface network/HTTP errors so the caller can show them.
@@ -111,7 +118,14 @@ async function fetchUnreliable() {
     }
     else {
         console.log(await response.json());
+        err = await response.json();
         // Create html element and displays error fail and retry for x amount of times and specific interval 
+        return {
+            ok: false,
+            data: {
+
+            }
+        }
     }
 }
 
