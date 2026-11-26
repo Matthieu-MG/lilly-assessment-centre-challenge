@@ -30,7 +30,51 @@ const errorEl = document.getElementById("error");
  * Return the medicines array. Surface network/HTTP errors so the caller can show them.
  */
 async function fetchMedicines() {
+    console.log("Called");
+
     // TODO: fetch(`${BASE_URL}/medicines`), check response.ok, return the data.
+    const response = await fetch(`${BASE_URL}/medicines`);
+    if(response.ok) {
+        // Parse response data into javascript object
+        // Try/catch would be implemented in future
+        const data = (await response.json()).medicines;
+        console.log(data);
+
+        // Counter variable for logging purposes
+        var count = 0;
+
+        // Map lists to readable format and return
+        return data.map((medicine) => {
+            var name = medicine.name;
+            var price = medicine.price;
+
+            if(!name) {
+                console.log(`Medicine name is missing at element ${count}`)
+                console.log(name)
+                name = "<MEDICINE NAME MISSING>"
+            }
+            if(!price) {
+                console.log(`Price is missing at element ${count}`)
+                console.log(price)
+                price = "<PRICE MISSING>"
+            }
+            
+            // Converts price to string
+            price = `${price}`
+
+            // Increment index count
+            count++;
+
+            // Return formatted medicine data
+            return {
+                name,
+                price 
+            }
+        })
+    }
+    else {
+        return response.statusText;
+    }
 }
 
 /**
@@ -43,6 +87,44 @@ function renderMedicines(data) {
     // TODO: build a table (the .results styles expect a <table>), iterate the
     // records, and render each row safely. Use the .invalid class to flag bad
     // values if you like.
+
+    // Create table element and add it to container resultsEl
+    const table = document.createElement("table");
+    resultsEl.append(table);
+
+    // Create table header
+    const t_head = document.createElement("thead");
+    const t_head_row = document.createElement("tr");
+
+    const t_head_name = document.createElement("td");
+    t_head_name.innerText = "Name"
+
+    const t_head_price = document.createElement("td");
+    t_head_price.innerText = "Price"
+
+    t_head_row.append(t_head_name);
+    t_head_row.append(t_head_price);
+    t_head.append(t_head_row);
+    table.append(t_head);
+
+    const t_body = document.createElement("tbody");
+
+    // Creates table rows and adds them to table body
+    data.forEach(row => {
+        const t_row = document.createElement("tr")
+        
+        const r_name = document.createElement("td")
+        r_name.innerText = row.name;
+
+        const r_price = document.createElement("td")
+        r_price.innerText = row.price;
+
+        t_row.append(r_name);
+        t_row.append(r_price);
+        t_body.append(t_row);
+    });
+
+   table.append(t_body);
 }
 
 /**
@@ -53,14 +135,37 @@ function renderMedicines(data) {
  */
 async function fetchUnreliable() {
     // TODO: implement the retry loop here.
+    const response = await fetch(`${BASE_URL}/medicines`);
+    
+    if(response.ok) {
+        //calls parseMedicineData
+    }
+    else {
+        console.log(await response.json());
+        // Create html element and displays error fail and retry for x amount of times and specific interval 
+    }
+}
+
+// Format Medicine data for both routes and returns it
+async function parseMedicineData() {
+
 }
 
 // ---- Button wiring (already works - no need to change) ----
 document.getElementById("load-medicines").addEventListener("click", async () => {
     // TODO: call fetchMedicines() then renderMedicines(data),
+
+    // Waits for medicines to be fetched and parsed.
+    const medicines_response = await fetchMedicines();
+    
+    // Check that medicines_response is valid
+    // TODO
+
+    renderMedicines(medicines_response);
     // showing #loading and clearing #error appropriately.
 });
 
 document.getElementById("load-unreliable").addEventListener("click", async () => {
     // TODO: call fetchUnreliable().
+    await fetchUnreliable();
 });
