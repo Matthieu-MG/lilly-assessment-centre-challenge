@@ -35,42 +35,7 @@ async function fetchMedicines() {
     // TODO: fetch(`${BASE_URL}/medicines`), check response.ok, return the data.
     const response = await fetch(`${BASE_URL}/medicines`);
     if(response.ok) {
-        // Parse response data into javascript object
-        // Try/catch would be implemented in future
-        const data = (await response.json()).medicines;
-        console.log(data);
-
-        // Counter variable for logging purposes
-        var count = 0;
-
-        // Map lists to readable format and return
-        return data.map((medicine) => {
-            var name = medicine.name;
-            var price = medicine.price;
-
-            if(!name) {
-                console.log(`Medicine name is missing at element ${count}`)
-                console.log(name)
-                name = "<MEDICINE NAME MISSING>"
-            }
-            if(!price) {
-                console.log(`Price is missing at element ${count}`)
-                console.log(price)
-                price = "<PRICE MISSING>"
-            }
-            
-            // Converts price to string
-            price = `${price}`
-
-            // Increment index count
-            count++;
-
-            // Return formatted medicine data
-            return {
-                name,
-                price 
-            }
-        })
+        
     }
     else {
         return response.statusText;
@@ -148,7 +113,42 @@ async function fetchUnreliable() {
 
 // Format Medicine data for both routes and returns it
 async function parseMedicineData() {
+// Parse response data into javascript object
+        // Try/catch would be implemented in future
+        const data = (await response.json()).medicines;
+        console.log(data);
 
+        // Counter variable for logging purposes
+        var count = 0;
+
+        // Map lists to readable format and return
+        return data.map((medicine) => {
+            var name = medicine.name;
+            var price = medicine.price;
+
+            if(!name) {
+                console.log(`Medicine name is missing at element ${count}`)
+                console.log(name)
+                name = "<MEDICINE NAME MISSING>"
+            }
+            if(!price) {
+                console.log(`Price is missing at element ${count}`)
+                console.log(price)
+                price = "<PRICE MISSING>"
+            }
+            
+            // Converts price to string
+            price = `${price}`
+
+            // Increment index count
+            count++;
+
+            // Return formatted medicine data
+            return {
+                name,
+                price 
+            }
+        })
 }
 
 // ---- Button wiring (already works - no need to change) ----
